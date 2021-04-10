@@ -1,19 +1,27 @@
-export interface IContentCreation {
-  skylink: string; // skylink
-  metadata: object; // should be valid JSON
-}
+import { Post, PostContent } from "./skystandards";
 
-export interface IContentInteraction {
-  skylink: string; // skylink
-  metadata: object; // should be valid JSON
-}
-
-export interface IDACResponse {
-  submitted: boolean;
+export interface IFeedDACResponse {
+  ref?: string;
+  success: boolean;
   error?: string;
 }
 
-export interface IContentRecordDAC {
-  recordNewContent(...data: IContentCreation[]): Promise<IDACResponse>;
-  recordInteraction(...data: IContentInteraction[]): Promise<IDACResponse>;
+export interface IFeedDAC {
+  createPost(
+    content: PostContent | string,
+    mentions: string[],
+  ): Promise<IFeedDACResponse>;
+  
+  createComment(
+    content: PostContent | string,
+    commentTo: string,
+    parent: Post | string,
+    mentions: string[],
+  ): Promise<IFeedDACResponse>;
+
+  createRepost(
+    repostOf: string,
+    parent: Post | string,
+    mentions: string[],
+  ): Promise<IFeedDACResponse>
 }
