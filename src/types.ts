@@ -6,6 +6,30 @@ export interface IFeedDACResponse {
   error?: string;
 }
 
+export interface IIndex {
+  version: number;
+
+  currPageNumber: number;
+  currPageNumEntries: number;
+
+  latestItemTimestamp?: number;
+  // pages: string[];
+  pageSize: number;
+}
+
+export interface IPage {
+  $schema: string;
+
+  _self: string; // back reference to the path
+  indexPath: string; // back reference to the index
+
+  items: Post[];
+}
+
+export interface IDictionary {
+  [key: string]: boolean;
+}
+
 export interface IFeedDAC {
   createPost(
     content: PostContent | string,

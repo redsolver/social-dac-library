@@ -44,7 +44,7 @@
     /**
      * Unix timestamp (in millisecons) when this post was created/posted
      */
-    ts?: number;
+    ts: number;
 }
 
 /**
