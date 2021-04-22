@@ -9,7 +9,7 @@
     "outDir": "dist",
 
     "moduleResolution": "node",
-    "target": "esnext",
+    "target": "es2019",
     "types": ["node"]
   },
   "include": ["src/**/*"],
