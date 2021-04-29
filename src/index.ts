@@ -6,7 +6,7 @@ import {
   IFeedDACResponse, IFeedDAC, IIndex, IDictionary, IPage
 } from "./types";
 
-const DAC_DOMAIN = "skyfeed-dev.hns";
+const DAC_DOMAIN = "feed-dac.hns";
 
 export class FeedDAC extends DacLibrary implements IFeedDAC {
   public constructor() {
@@ -185,7 +185,7 @@ export class FeedDAC extends DacLibrary implements IFeedDAC {
           }
 
           limitBeforePageEnd.set(currentSkapp, page.items[0].ts ?? 0); // TODO Sort
-          // TODO Update SkyStandards structures
+
 
           skappPostBuffer.push(...page.items);
 
