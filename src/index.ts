@@ -38,12 +38,12 @@ export class SocialDAC extends DacLibrary implements ISocialDAC {
     ];
   }
 
-/*   public async isFollowing( // TODO Implement
-    userId: string
-  ): Promise<boolean> { // TODO Get logged-in userId using the DAC
-    const map = await null;
-    return false;
-  } */
+  /*   public async isFollowing( // TODO Implement
+      userId: string
+    ): Promise<boolean> { // TODO Get logged-in userId using the DAC
+      const map = await null;
+      return false;
+    } */
 
   public async getFollowingForUser(userId: string): Promise<string[]> { // TODO Caching
     if (typeof this.client === "undefined") {
@@ -53,6 +53,7 @@ export class SocialDAC extends DacLibrary implements ISocialDAC {
 
     if (userId.startsWith('ed25519-')) {
       userId = userId.substring(8);
+    } else if (userId.length == 64) {
     } else {
       throw Error('SocialDAC: Unsupported userId format')
     }

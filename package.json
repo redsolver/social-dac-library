@@ -1,6 +1,6 @@
 {
   "name": "social-dac-library",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "This library exposes a class that wraps the Social DAC, created and hosted by redsolver.",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
