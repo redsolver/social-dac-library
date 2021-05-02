@@ -1,51 +1,30 @@
-import { Post, PostContent } from "./skystandards";
 
-export interface IFeedDACResponse {
-  ref?: string;
+export interface ISocialDACResponse {
+  // ref?: string;
   success: boolean;
   error?: string;
 }
 
-export interface IIndex {
-  version: number;
-
-  currPageNumber: number;
-  currPageNumEntries: number;
-
-  latestItemTimestamp?: number;
-  // pages: string[];
-  pageSize: number;
-}
-
-export interface IPage {
+export interface IUserRelations {
   $schema: string;
-
   _self: string; // back reference to the path
-  indexPath: string; // back reference to the index
 
-  items: Post[];
+  relationType: string;
+
+  relations: { [key: string]: any };
 }
+
 
 export interface IDictionary {
   [key: string]: boolean;
 }
 
-export interface IFeedDAC {
-  createPost(
-    content: PostContent | string,
-    mentions: string[],
-  ): Promise<IFeedDACResponse>;
-  
-  createComment(
-    content: PostContent | string,
-    commentTo: string,
-    parent: Post | string,
-    mentions: string[],
-  ): Promise<IFeedDACResponse>;
+export interface ISocialDAC {
 
-  createRepost(
-    repostOf: string,
-    parent: Post | string,
-    mentions: string[],
-  ): Promise<IFeedDACResponse>
+  // Requires login
+  follow(userId: string): Promise<ISocialDACResponse>;
+  unfollow(userId: string): Promise<ISocialDACResponse>;
+
+  // isFollowing(userId: string): Promise<boolean>;
+
 }

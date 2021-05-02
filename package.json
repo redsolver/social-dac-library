@@ -1,7 +1,7 @@
 {
-  "name": "feed-dac-library",
+  "name": "social-dac-library",
   "version": "0.2.0",
-  "description": "This library exposes a class that wraps the Feed DAC, created and hosted by redsolver.",
+  "description": "This library exposes a class that wraps the Social DAC, created and hosted by redsolver.",
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.js",
   "type": "module",
@@ -16,9 +16,9 @@
   "author": "redsolver",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/redsolver/feed-dac-library/issues"
+    "url": "https://github.com/redsolver/social-dac-library/issues"
   },
-  "homepage": "https://github.com/redsolver/feed-dac-library",
+  "homepage": "https://github.com/redsolver/social-dac-library",
   "publishConfig": {
     "access": "public"
   },
