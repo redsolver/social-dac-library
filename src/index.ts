@@ -91,7 +91,7 @@ export class SocialDAC extends DacLibrary implements ISocialDAC {
 
     const following = await this.getFollowingForUser(userId);
 
-    return Object.keys(following).length;
+    return following.length;
   }
 
 
