@@ -1,4 +1,5 @@
-import { CustomConnectorOptions, DacLibrary, MySky, SkynetClient } from "skynet-js";
+import { CustomConnectorOptions, DacLibrary, MySky, SignedRegistryEntry, SkynetClient } from "skynet-js";
+import { GetFileContentResponse } from "skynet-js/dist/download";
 import { PermCategory, Permission, PermType } from "skynet-mysky-utils";
 import { PostContent, Convert, Post } from "./skystandards";
 
@@ -38,12 +39,22 @@ export class SocialDAC extends DacLibrary implements ISocialDAC {
     ];
   }
 
-  /*   public async isFollowing( // TODO Implement
-      userId: string
-    ): Promise<boolean> { // TODO Get logged-in userId using the DAC
-      const map = await null;
-      return false;
-    } */
+  public async isFollowing(
+    userId: string
+  ): Promise<boolean> {
+
+    if (!this.connector) {
+      throw new Error("Connector not initialized");
+    }
+
+    const loggedInUserId = await this.connector.connection
+      .remoteHandle()
+      .call("getLoggedInUserId");
+
+    const following = await this.getFollowingForUser(loggedInUserId);
+
+    return following.includes(userId);
+  }
 
   public async getFollowingForUser(userId: string): Promise<string[]> { // TODO Caching
     if (typeof this.client === "undefined") {
@@ -60,7 +71,8 @@ export class SocialDAC extends DacLibrary implements ISocialDAC {
 
     let skappsIndex = await this.downloadFile<IDictionary>(userId, `${DAC_DOMAIN}/skapps.json`);
     if (!skappsIndex) {
-      return [];
+      skappsIndex = {};
+      // return [];
     }
 
     const promiseList: Promise<{ [key: string]: any }>[] = [];
@@ -69,12 +81,46 @@ export class SocialDAC extends DacLibrary implements ISocialDAC {
     for (const skapp of Object.keys(skappsIndex)) {
       promiseList.push(this.fetchUserRelationsPage(userId, skapp));
     }
+    promiseList.push(this.fetchDeprecatedSkyFeedUserRelationsPage(userId));
 
     const list = await Promise.all(promiseList);
 
     const allUserRelations: { [key: string]: any } = Object.assign({}, ...list);
 
     return Object.keys(allUserRelations);
+  }
+
+  private async fetchDeprecatedSkyFeedUserRelationsPage(userId: string): Promise<{ [key: string]: any }> {
+    try {
+      const result: SignedRegistryEntry = await this.client!.registry.getEntry(userId, "profile");
+
+      if (result.entry === null) {
+        return {};
+      }
+
+      const data: GetFileContentResponse = await this.client!.getFileContent(result.entry.data);
+
+      if (typeof data.data !== 'string') return {};
+
+      const skyIdProfile: any = JSON.parse(data.data);
+
+      if (skyIdProfile.dapps.skyfeed === undefined) {
+        return {};
+      }
+
+      const followingResult: SignedRegistryEntry = await this.client!.registry.getEntry(skyIdProfile.dapps.skyfeed.publicKey, "skyfeed-following");
+      if (followingResult.entry === null) {
+        return {};
+      }
+
+      const followingData: GetFileContentResponse = await this.client!.getFileContent(followingResult.entry.data);
+
+      return followingData.data as {};
+
+    } catch (e) {
+      console.error(e);
+      return {};
+    }
   }
 
   private async fetchUserRelationsPage(userId: string, skapp: string): Promise<{ [key: string]: any }> {
